@@ -1,2 +1,2 @@
 # Dot-eater-typescript
-Dot-eater using Typescript
+[Dot-eater project](https://github.com/kdaisho/dot-eater) using Typescript
