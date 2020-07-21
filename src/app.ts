@@ -52,10 +52,6 @@ const cellAA = [
 	"<span class=\"dot\"><span></span></span>"
 ];
 
-// function Character(aa) {
-// 	this.aa = aa;
-// }
-
 const characters = [
 	new Character("<span class=\"character\"><span>😎</span></span>"),
 	new Character("<span class=\"character\"><span>👹</span></span>"),
@@ -101,7 +97,8 @@ function setDots() {
 	}
 }
 
-function onKeyDown(event) {
+function onKeyDown(event: object) {
+	console.log(typeof event);
 	if (lock) return;
 	let targetPos = new Vec2(player.pos.x, player.pos.y);
 
