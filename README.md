@@ -1,2 +1,2 @@
-# dot-eater-typescript
+# Dot-eater-typescript
 Dot-eater using Typescript
