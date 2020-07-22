@@ -8,6 +8,5 @@
 		"strictNullChecks": true,
 		"declaration": true,
 		"sourceMap": true
-
 	}
 }

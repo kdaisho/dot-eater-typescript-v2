@@ -1,5 +1,5 @@
 import Vec2  from "./Vec2";
-import Character  from "./Character";
+import { Character, Enemies } from "./Character";
 
 const cell = {
 	none: 0,
@@ -59,21 +59,32 @@ const characters = [
 ];
 
 const player = characters[character.player];
-const enemies = [];
-let intervalId = null;
-let lock = false;
+// const enemies: Array<Enemies> = [];
+const enemies: Array<Character> = [];
+
+let intervalId: number;
+let isLocked: boolean  = false;
+
+// interface Enemies {
+// 	[index: number]: object;
+// 	pos: object | undefined;
+// 	ai: number | undefined;
+// }
 
 function init() {
-	lock = false;
+	// console.log(characters);
+	isLocked = false;
 	player.pos = new Vec2(4, 1);
 	setDots();
-	enemies[0] = characters[character.enemy1];
-	enemies[1] = characters[character.enemy2];
+	// enemies[0] = characters[character.enemy1];
+	enemies.push(characters[character.enemy1]);
+	enemies.push(characters[character.enemy2]);
+	// console.log(typeof enemies[0]); //object
+	// enemies[1] = characters[character.enemy2];
 	enemies[0].pos = new Vec2(1, 4);
 	enemies[1].pos = new Vec2(7, 4);
 	enemies[0].ai = ai.random;
 	enemies[1].ai = ai.chase;
-
 	for (let i = 0; i < enemies.length; i++) {
 		enemies[i].lastPos = new Vec2(enemies[i].pos.x, enemies[i].pos.y);
 	}
@@ -97,10 +108,9 @@ function setDots() {
 	}
 }
 
-function onKeyDown(event: object) {
-	console.log(typeof event);
-	if (lock) return;
-	let targetPos = new Vec2(player.pos.x, player.pos.y);
+function onKeyDown(event: KeyboardEvent) {
+	if (isLocked) return;
+	let targetPos: object = new Vec2(player.pos.x, player.pos.y);
 
 	switch (event.key) {
 		case "ArrowUp":
@@ -147,7 +157,7 @@ function interval() {
 	draw();
 }
 
-function enemyMove(enemy) {
+function enemyMove(enemy: object) {
 	const pos = [];
 	let v = null;
 	for (let i = 0; i < Object.keys(direction).length; i++) {
@@ -166,8 +176,8 @@ function enemyMove(enemy) {
 
 	switch (enemy.ai) {
 		case ai.random:
-			const r = parseInt(Math.random() * pos.length);
-			enemy.pos = pos[r];
+			const r = Math.random() * pos.length;
+			enemy.pos = pos[Math.floor(r)];
 			break;
 		case ai.chase:
 			let nearest = pos[0];
@@ -205,7 +215,7 @@ function loopPos(v) {
 }
 
 function isEnd() {
-	if (lock) return;
+	if (isLocked) return;
 	for (let i = 0; i < enemies.length; i++) {
 		if (enemies[i].pos.x === player.pos.x && enemies[i].pos.y === player.pos.y) {
 			displayMessage(true);
@@ -219,12 +229,12 @@ function isEnd() {
 			}
 		}
 	}
-	displayMessage();
+	displayMessage(false);
 	return true;
 }
 
-function displayMessage(dead) {
-	if (lock) return;
+function displayMessage(dead: boolean) {
+	if (isLocked) return;
 	clearInterval(intervalId);
 	const backdrop = document.createElement("div");
 	backdrop.setAttribute("id", "backdrop");
@@ -243,11 +253,11 @@ function displayMessage(dead) {
 	document.body.appendChild(msg);
 
 	function restore() {
-		document.body.removeChild(document.getElementById("backdrop"));
-		document.body.removeChild(document.getElementById("msg"));
+		document.body.removeChild(<HTMLElement>document.getElementById("backdrop"));
+		document.body.removeChild(<HTMLElement>document.getElementById("msg"));
 		init();
 	}
-	lock = true;
+	isLocked = true;
 }
 
 function draw() {
