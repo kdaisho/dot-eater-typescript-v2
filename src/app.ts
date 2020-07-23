@@ -61,6 +61,7 @@ const characters = [
 const player = characters[character.player];
 // const enemies: Array<Enemies> = [];
 const enemies: Array<Character> = [];
+// const enemies: object[] = [];
 
 let intervalId: number;
 let isLocked: boolean  = false;
@@ -70,7 +71,6 @@ let isLocked: boolean  = false;
 // 	pos: object | undefined;
 // 	ai: number | undefined;
 // }
-
 function init() {
 	// console.log(characters);
 	isLocked = false;

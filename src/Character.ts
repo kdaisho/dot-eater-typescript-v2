@@ -2,7 +2,7 @@ export class Character {
 	[index: number]: object;
 	aa?: string;
 	ai?: number;
-	pos = {};
+	pos?: object;
 	lastPos = {};
 	constructor(aa: string) {
 		this.aa = aa;
