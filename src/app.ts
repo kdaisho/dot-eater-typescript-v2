@@ -59,12 +59,10 @@ const characters = [
 ];
 
 const player = characters[character.player];
-// const enemies: Array<Enemies> = [];
-const enemies: Array<Character> = [];
-// const enemies: object[] = [];
+let enemies: Array<Character> = [];
 
 let intervalId: number;
-let isLocked: boolean  = false;
+let isLocked: boolean;
 
 // interface Enemies {
 // 	[index: number]: object;
@@ -72,15 +70,15 @@ let isLocked: boolean  = false;
 // 	ai: number | undefined;
 // }
 function init() {
-	// console.log(characters);
 	isLocked = false;
 	player.pos = new Vec2(4, 1);
 	setDots();
 	// enemies[0] = characters[character.enemy1];
+	if (enemies.length) {
+		enemies = [];
+	}
 	enemies.push(characters[character.enemy1]);
 	enemies.push(characters[character.enemy2]);
-	// console.log(typeof enemies[0]); //object
-	// enemies[1] = characters[character.enemy2];
 	enemies[0].pos = new Vec2(1, 4);
 	enemies[1].pos = new Vec2(7, 4);
 	enemies[0].ai = ai.random;
