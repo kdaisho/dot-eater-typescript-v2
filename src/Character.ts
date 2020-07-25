@@ -1,19 +1,11 @@
-export class Character {
-	[index: number]: object;
-	aa?: string;
-	ai?: number;
-	pos?: object;
-	lastPos = {};
+class Character {
+	aa: string;
+	pos: object;
+
 	constructor(aa: string) {
 		this.aa = aa;
+		this.pos = {};
 	}
 }
-
-// export class Enemies extends Character {
-// 	// [index: number]: object;
-// 	[index: number]: { ai: number | undefined; pos: object | undefined };
-// 	ai: number | undefined;
-// 	pos: object | undefined;
-// }
 
 export default Character;

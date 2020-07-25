@@ -1,5 +1,6 @@
 import Vec2  from "./Vec2";
-import { Character, Enemies } from "./Character";
+import Character from "./Character";
+import Enemy from "./Enemy";
 
 const cell = {
 	none: 0,
@@ -54,26 +55,22 @@ const cellAA = [
 
 const characters = [
 	new Character("<span class=\"character\"><span>😎</span></span>"),
-	new Character("<span class=\"character\"><span>👹</span></span>"),
-	new Character("<span class=\"character\"><span>👺</span></span>")
+	new Enemy("<span class=\"character\"><span>👹</span></span>"),
+	new Enemy("<span class=\"character\"><span>👺</span></span>")
 ];
 
+type Position = { x: number; y: number };
+
 const player = characters[character.player];
-let enemies: Array<Character> = [];
+let enemies: Array<Enemy> = [];
 
 let intervalId: number;
 let isLocked: boolean;
 
-// interface Enemies {
-// 	[index: number]: object;
-// 	pos: object | undefined;
-// 	ai: number | undefined;
-// }
 function init() {
 	isLocked = false;
 	player.pos = new Vec2(4, 1);
 	setDots();
-	// enemies[0] = characters[character.enemy1];
 	if (enemies.length) {
 		enemies = [];
 	}
@@ -83,15 +80,16 @@ function init() {
 	enemies[1].pos = new Vec2(7, 4);
 	enemies[0].ai = ai.random;
 	enemies[1].ai = ai.chase;
+
 	for (let i = 0; i < enemies.length; i++) {
-		enemies[i].lastPos = new Vec2(enemies[i].pos.x, enemies[i].pos.y);
+		enemies[i].lastPos = new Vec2((<Vec2>enemies[i].pos).x, (<Vec2>enemies[i].pos).y);
 	}
 
 	if (intervalId) {
 		clearInterval(intervalId);
 	}
 
-	intervalId = setInterval(interval, 1000);
+	intervalId = setInterval(interval, 250);
 	addEventListener("keydown", onKeyDown);
 	draw();
 }
@@ -99,7 +97,7 @@ function init() {
 function setDots() {
 	for (let i = 0; i < cells.length; i++) {
 		for (let j = 0; j < cells[i].length; j++) {
-			if (!(player.pos.y === i && player.pos.x === j) && cells[i][j] === cell.none) {
+			if (!((<Vec2>player.pos).y === i && (<Vec2>player.pos).x === j) && cells[i][j] === cell.none) {
 				cells[i][j] = cell.dot;
 			}
 		}
@@ -108,8 +106,8 @@ function setDots() {
 
 function onKeyDown(event: KeyboardEvent) {
 	if (isLocked) return;
-	let targetPos: object = new Vec2(player.pos.x, player.pos.y);
-
+	let targetPos: Position;
+	targetPos = new Vec2((<Vec2>player.pos).x, (<Vec2>player.pos).y);
 	switch (event.key) {
 		case "ArrowUp":
 			targetPos.y--;
@@ -155,36 +153,36 @@ function interval() {
 	draw();
 }
 
-function enemyMove(enemy: object) {
-	const pos = [];
+function enemyMove(enemy: Enemy) {
+	const enemyPosition = [];
 	let v = null;
 	for (let i = 0; i < Object.keys(direction).length; i++) {
-		v = new Vec2(enemy.pos.x + directions[i].x, enemy.pos.y + directions[i].y);
+		v = new Vec2((<Vec2>enemy.pos).x + directions[i].x, (<Vec2>enemy.pos).y + directions[i].y);
 		loopPos(v);
 		if (cells[v.y][v.x] === cell.wall) {
 			continue;
 		}
-		if (v.x === enemy.lastPos.x && v.y === enemy.lastPos.y) {
+		if (v.x === (<Vec2>enemy.lastPos).x && v.y === (<Vec2>enemy.lastPos).y) {
 			continue;
 		}
-		pos.push(v);
+		enemyPosition.push(v);
 	}
 
-	enemy.lastPos = new Vec2(enemy.pos.x, enemy.pos.y);
+	enemy.lastPos = new Vec2((<Vec2>enemy.pos).x, (<Vec2>enemy.pos).y);
 
 	switch (enemy.ai) {
 		case ai.random:
-			const r = Math.random() * pos.length;
-			enemy.pos = pos[Math.floor(r)];
+			const r = Math.random() * enemyPosition.length;
+			enemy.pos = enemyPosition[Math.floor(r)];
 			break;
 		case ai.chase:
-			let nearest = pos[0];
-			for (let i = 1; i < pos.length; i++) {
-				if (distanceToPlayer(nearest) > distanceToPlayer(pos[i])) {
-					nearest = pos[i];
+			let nearest = enemyPosition[0];
+			for (let i = 1; i < enemyPosition.length; i++) {
+				if (distanceToPlayer(nearest) > distanceToPlayer(enemyPosition[i])) {
+					nearest = enemyPosition[i];
 				}
 			}
-			distanceToPlayer(v);
+			distanceToPlayer(<Vec2>v);
 			enemy.pos = nearest;
 		default:
 			console.log("No AI type found");
@@ -192,12 +190,12 @@ function enemyMove(enemy: object) {
 
 	isEnd();
 
-	function distanceToPlayer(v) {
-		return Math.sqrt(Math.pow(player.pos.x - v.x, 2) + Math.pow(player.pos.y - v.y, 2))
+	function distanceToPlayer(v: Vec2) {
+		return Math.sqrt(Math.pow((<Vec2>player.pos).x - v.x, 2) + Math.pow((<Vec2>player.pos).y - v.y, 2))
 	}
 }
 
-function loopPos(v) {
+function loopPos(v: Vec2) {
 	if (v.x < 0) {
 		v.x = cells[0].length - 1;
 	}
@@ -215,7 +213,7 @@ function loopPos(v) {
 function isEnd() {
 	if (isLocked) return;
 	for (let i = 0; i < enemies.length; i++) {
-		if (enemies[i].pos.x === player.pos.x && enemies[i].pos.y === player.pos.y) {
+		if ((<Vec2>enemies[i].pos).x === (<Vec2>player.pos).x && (<Vec2>enemies[i].pos).y === (<Vec2>player.pos).y) {
 			displayMessage(true);
 			return true;
 		}
@@ -259,14 +257,14 @@ function displayMessage(dead: boolean) {
 }
 
 function draw() {
-	const root = document.getElementById("root");
+	const root = <HTMLDivElement>document.getElementById("root");
 	let html = "";
 	let str = "";
 	for (let i = 0; i < cells.length; i++) {
 		for (let j = 0; j < cells[i].length; j++) {
 			str = cellAA[cells[i][j]];
 			for (let k = 0; k < characters.length; k++) {
-				if ((i === characters[k].pos.y) && (j === characters[k].pos.x)) {
+				if ((i === (<Vec2>characters[k].pos).y) && (j === (<Vec2>characters[k].pos).x)) {
 					str = characters[k].aa;
 				}
 			}
@@ -274,7 +272,6 @@ function draw() {
 		}
 		html += "<br>";
 	}
-
 	root.innerHTML = html;
 }
 
