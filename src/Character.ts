@@ -1,4 +1,4 @@
-class Character {
+export class Character {
 	aa: string;
 	pos: object;
 
@@ -7,5 +7,3 @@ class Character {
 		this.pos = {};
 	}
 }
-
-export default Character;

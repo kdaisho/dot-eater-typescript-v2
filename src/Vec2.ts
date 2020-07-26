@@ -1,4 +1,4 @@
-class Vec2 {
+export class Vec2 {
 	x: number;
 	y: number;
 
@@ -7,5 +7,3 @@ class Vec2 {
 		this.y = y;
 	}
 }
-
-export default Vec2;

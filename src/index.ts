@@ -1,6 +1,6 @@
-import Vec2  from "./Vec2";
-import Character from "./Character";
-import Enemy from "./Enemy";
+import { Vec2 } from "./Vec2";
+import { Character } from "./Character";
+import { Enemy } from "./Enemy";
 
 const cell = {
 	none: 0,
@@ -64,7 +64,7 @@ type Position = { x: number; y: number };
 const player = characters[character.player];
 let enemies: Array<Enemy> = [];
 
-let intervalId: number;
+let intervalId: ReturnType<typeof setTimeout>;
 let isLocked: boolean;
 
 function init() {
