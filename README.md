@@ -1,6 +1,9 @@
 # Dot-eater-typescript
 Refactoring [Dot-eater project](https://github.com/kdaisho/dot-eater) using Typescript
 
+## CI/CD with Travis CI
+Auto-deploy on master branch change
+
 ## NPM script for development
 `npm run dev`
 
