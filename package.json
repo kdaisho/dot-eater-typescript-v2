@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "webpack-dev-server",
     "build": "webpack --mode production",
-    "deploy": "aws s3 cp public/ s3://mybrailler.com/ --recursive"
+    "deploy": "aws s3 cp public/ s3://mybrailler.com/ --recursive",
+    "test": "test --passWithNoTests"
   },
   "repository": {
     "type": "git",
