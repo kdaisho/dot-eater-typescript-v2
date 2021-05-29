@@ -56,7 +56,7 @@ const cellAA = [
 const characters = [
 	new Character("<span class=\"character\"><span>🐈</span></span>"),
 	new Enemy("<span class=\"character\"><span>👹</span></span>"),
-	new Enemy("<span class=\"character\"><span>👺</span></span>")
+	new Enemy("<span class=\"character\"><span>👻</span></span>")
 ];
 
 type Position = { x: number; y: number };
