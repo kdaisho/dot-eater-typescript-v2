@@ -70,3 +70,17 @@ span.dot span {
     transform: translateX(-50%);
     z-index: 30;
 }
+
+.not-found h1 {
+  padding-top: 3rem;
+  position: relative;
+  z-index: 10;
+}
+
+.not-found img {
+  bottom: 0;
+  left: calc(50% - 150px);
+  position: absolute;
+  width: 320px;
+  z-index: 1;
+}
